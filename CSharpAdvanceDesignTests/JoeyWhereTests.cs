@@ -27,22 +27,18 @@ namespace CSharpAdvanceDesignTests
                 new Product {Id = 8, Cost = 18, Price = 780, Supplier = "Yahoo"}
             };
 
-            var expected = new[] {63, 153, 89};
-            var actual = JoeyGroupSum(products);
+            var expected = new[] {15, 21};
+            var actual = JoeyGroupSum(products, 5, p => p.Id);
             expected.ToExpectedObject().ShouldMatch(actual);
         }
 
-        private IEnumerable<int> JoeyGroupSum(IEnumerable<Product> products)
+        private IEnumerable<int> JoeyGroupSum<TSource>(IEnumerable<TSource> products, int pageSize, Func<TSource, int> selector)
         {
-            // origin
-            // return products.GroupBy(p => Math.Ceiling(p.Id / 3.0)).Select(item => item.Sum(i => i.Cost)).ToArray();
-
-            // improved
             int pageIndex = 0;
-            int pageSize = 3;
-            while (products.Count() >= pageSize * pageIndex)
+            var count = products.Count();
+            while (count >= pageSize * pageIndex)
             {
-                yield return products.Skip(pageSize * pageIndex).Take(pageSize).Sum(p => p.Cost);
+                yield return products.Skip(pageSize * pageIndex).Take(pageSize).Sum(selector);
                 pageIndex++;
             }
         }
