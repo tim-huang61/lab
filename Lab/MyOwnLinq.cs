@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Lab.Entities;
 
 namespace Lab
 {
@@ -17,7 +18,7 @@ namespace Lab
                 {
                     yield return current;
                 }
-            }=
+            }
         }
 
         public static IEnumerable<TSource> JoeyWhere<TSource>(this IEnumerable<TSource> list,
@@ -51,6 +52,22 @@ namespace Lab
             foreach (var item in list)
             {
                 yield return predicate(item, index);
+                index++;
+            }
+        }
+
+        public static IEnumerable<Employee> JoeyTake(this IEnumerable<Employee> employees, int takeCount)
+        {
+            int index = 0;
+            var enumerator = employees.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var current = enumerator.Current;
+                if (index < takeCount)
+                {
+                    yield return current;
+                }
+
                 index++;
             }
         }
