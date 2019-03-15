@@ -3,11 +3,11 @@ using Lab.Entities;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using Lab;
 
 namespace CSharpAdvanceDesignTests
 {
     [TestFixture]
-    [Ignore("not yet")]
     public class JoeySkipTests
     {
         [Test]
@@ -15,7 +15,7 @@ namespace CSharpAdvanceDesignTests
         {
             var employees = GetEmployees();
 
-            var actual = JoeySelect(employees);
+            var actual = employees.JoeySkip(2);
 
             var expected = new List<Employee>
             {
@@ -25,11 +25,6 @@ namespace CSharpAdvanceDesignTests
             };
 
             expected.ToExpectedObject().ShouldEqual(actual.ToList());
-        }
-
-        private IEnumerable<Employee> JoeySelect(IEnumerable<Employee> employees)
-        {
-            throw new System.NotImplementedException();
         }
 
         private static IEnumerable<Employee> GetEmployees()

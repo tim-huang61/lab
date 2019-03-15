@@ -56,7 +56,7 @@ namespace Lab
             }
         }
 
-        public static IEnumerable<Employee> JoeyTake(this IEnumerable<Employee> employees, int takeCount)
+        public static IEnumerable<TSource> JoeyTake<TSource>(this IEnumerable<TSource> employees, int takeCount)
         {
             int index = 0;
             var enumerator = employees.GetEnumerator();
@@ -64,6 +64,22 @@ namespace Lab
             {
                 var current = enumerator.Current;
                 if (index < takeCount)
+                {
+                    yield return current;
+                }
+
+                index++;
+            }
+        }
+
+        public static IEnumerable<TSource> JoeySkip<TSource>(this IEnumerable<TSource> source, int skipCount)
+        {
+            var enumerator = source.GetEnumerator();
+            int index = 0;
+            while (enumerator.MoveNext())
+            {
+                var current = enumerator.Current;
+                if (index >= skipCount)
                 {
                     yield return current;
                 }
