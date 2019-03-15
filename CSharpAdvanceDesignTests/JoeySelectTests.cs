@@ -49,11 +49,19 @@ namespace CSharpAdvanceDesignTests
         [Test]
         public void get_full_name()
         {
-            var expected = new[]{ "Joey-Chen","Tom-Li","David-Chen" };
+            var expected = new[] {"Joey-Chen", "Tom-Li", "David-Chen"};
 
             var actual = GetEmployees().JoeySelect(e => $"{e.FirstName}-{e.LastName}");
             expected.ToExpectedObject().ShouldMatch(actual);
-            
+        }
+        
+        [Test]
+        public void get_full_name_length()
+        {
+            var expected = new[] {9, 6, 10};
+
+            var actual = GetEmployees().JoeySelect(e => $"{e.FirstName}-{e.LastName}".Length);
+            expected.ToExpectedObject().ShouldMatch(actual);
         }
 
         private static IEnumerable<string> GetUrls()
