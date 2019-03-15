@@ -54,13 +54,22 @@ namespace CSharpAdvanceDesignTests
             var actual = GetEmployees().JoeySelect(e => $"{e.FirstName}-{e.LastName}");
             expected.ToExpectedObject().ShouldMatch(actual);
         }
-        
+
         [Test]
         public void get_full_name_length()
         {
             var expected = new[] {9, 6, 10};
 
             var actual = GetEmployees().JoeySelect(e => $"{e.FirstName}-{e.LastName}".Length);
+            expected.ToExpectedObject().ShouldMatch(actual);
+        }
+
+        [Test]
+        public void get_full_name_with_seq_no()
+        {
+            var expected = new[] {"1.Joey-Chen", "2.Tom-Li", "3.David-Chen"};
+
+            var actual = GetEmployees().JoeySelect((e, i) => $"{i + 1}.{e.FirstName}-{e.LastName}");
             expected.ToExpectedObject().ShouldMatch(actual);
         }
 
