@@ -25,7 +25,6 @@ namespace CSharpAdvanceDesignTests
             };
 
             var actual = products.JoeyWhere(product => product.Price > 200 && product.Price < 500);
-
             var expected = new List<Product>
             {
                 new Product {Id = 2, Cost = 21, Price = 210, Supplier = "Yahoo"},
@@ -67,8 +66,18 @@ namespace CSharpAdvanceDesignTests
         public void find_name_length_less_than_5()
         {
             var names = new[] {"Joye", "Cash", "Tim", "William", "Brain", "Jessica"};
-            var actual = names.JoeyWhere(name => name.Length < 5);
+            var actual = names.JoeyWhere((name, index) => name.Length < 5);
             var expected = new[] {"Joye", "Cash", "Tim"};
+
+            expected.ToExpectedObject().ShouldMatch(actual);
+        }
+
+        [Test]
+        public void find_name_is_even_index()
+        {
+            var names = new[] {"Joye", "Cash", "Tim", "William", "Brain", "Jessica"};
+            var actual = names.JoeyWhere((name, index) => index % 2 == 0);
+            var expected = new[] {"Joye", "Tim", "Brain"};
 
             expected.ToExpectedObject().ShouldMatch(actual);
         }

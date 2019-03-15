@@ -5,7 +5,8 @@ namespace Lab
 {
     public static class MyOwnLinq
     {
-        public static IEnumerable<TSource> JoeyWhere<TSource>(this IEnumerable<TSource> list, Func<TSource, bool> predicate)
+        public static IEnumerable<TSource> JoeyWhere<TSource>(this IEnumerable<TSource> list,
+            Func<TSource, bool> predicate)
         {
             foreach (var item in list)
             {
@@ -13,6 +14,21 @@ namespace Lab
                 {
                     yield return item;
                 }
+            }
+        }
+
+        public static IEnumerable<TSource> JoeyWhere<TSource>(this IEnumerable<TSource> list,
+            Func<TSource, int, bool> predicate)
+        {
+            var index = 0;
+            foreach (var item in list)
+            {
+                if (predicate(item, index))
+                {
+                    yield return item;
+                }
+
+                index++;
             }
         }
     }
