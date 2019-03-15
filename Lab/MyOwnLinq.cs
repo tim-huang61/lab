@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Lab
 {
@@ -8,13 +9,15 @@ namespace Lab
         public static IEnumerable<TSource> JoeyWhere<TSource>(this IEnumerable<TSource> list,
             Func<TSource, bool> predicate)
         {
-            foreach (var item in list)
+            var enumerator = list.GetEnumerator();
+            while (enumerator.MoveNext())
             {
-                if (predicate(item))
+                var current = enumerator.Current;
+                if (predicate(current))
                 {
-                    yield return item;
+                    yield return current;
                 }
-            }
+            }=
         }
 
         public static IEnumerable<TSource> JoeyWhere<TSource>(this IEnumerable<TSource> list,
