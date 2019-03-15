@@ -56,18 +56,14 @@ namespace Lab
             }
         }
 
+        //也可以用yield break;
         public static IEnumerable<TSource> JoeyTake<TSource>(this IEnumerable<TSource> employees, int takeCount)
         {
             int index = 0;
             var enumerator = employees.GetEnumerator();
-            while (enumerator.MoveNext())
+            while (enumerator.MoveNext() && index < takeCount)
             {
-                var current = enumerator.Current;
-                if (index < takeCount)
-                {
-                    yield return current;
-                }
-
+                yield return enumerator.Current;
                 index++;
             }
         }
