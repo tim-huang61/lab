@@ -1,8 +1,8 @@
 ﻿using ExpectedObjects;
 using Lab.Entities;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
+using Lab;
 
 namespace CSharpAdvanceDesignTests
 {
@@ -24,7 +24,7 @@ namespace CSharpAdvanceDesignTests
                 new Product {Id = 8, Cost = 18, Price = 780, Supplier = "Yahoo"}
             };
 
-            var actual = JoeyWhere(products, product => product.Price > 200 && product.Price < 500);
+            var actual = products.JoeyWhere(product => product.Price > 200 && product.Price < 500);
 
             var expected = new List<Product>
             {
@@ -51,7 +51,7 @@ namespace CSharpAdvanceDesignTests
                 new Product {Id = 8, Cost = 18, Price = 780, Supplier = "Yahoo"}
             };
 
-            var actual = JoeyWhere(products, p => p.Price > 200 && p.Price < 500 && p.Cost > 30);
+            var actual = products.JoeyWhere(p => p.Price > 200 && p.Price < 500 && p.Cost > 30);
 
             var expected = new List<Product>
             {
@@ -62,28 +62,15 @@ namespace CSharpAdvanceDesignTests
 
             expected.ToExpectedObject().ShouldMatch(actual);
         }
-        
-       [Test]
+
+        [Test]
         public void find_name_length_less_than_5()
         {
-            var names = new []{"Joye", "Cash", "Tim","William","Brain", "Jessica"};
-            var actual = JoeyWhere(names, name => name.Length < 5);
-            var expected = new []{"Joye","Cash","Tim"};
-            
-            expected.ToExpectedObject().ShouldMatch(actual);
-        }
-        
-        
+            var names = new[] {"Joye", "Cash", "Tim", "William", "Brain", "Jessica"};
+            var actual = names.JoeyWhere(name => name.Length < 5);
+            var expected = new[] {"Joye", "Cash", "Tim"};
 
-        private IEnumerable<T> JoeyWhere<T>(IEnumerable<T> list, Func<T, bool> predicate)
-        {
-            foreach (var item in list)
-            {
-                if (predicate(item))
-                {
-                    yield return item;
-                }
-            }
+            expected.ToExpectedObject().ShouldMatch(actual);
         }
     }
 }
