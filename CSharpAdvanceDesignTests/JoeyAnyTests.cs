@@ -22,16 +22,15 @@ namespace CSharpAdvanceDesignTests
             Assert.IsTrue(products.JoeyAny());
         }
 
-//        [Test]
-//        public void empty_employees()
-//        {
-//            var emptyEmployees = new Employee[]
-//            {
-//            };
-//
-//            var actual = JoeyAny(emptyEmployees);
-//            Assert.IsFalse(actual);
-//        }
+        [Test]
+        public void empty_employees()
+        {
+            var emptyProducts = new Product[]
+            {
+            };
+
+            Assert.IsFalse(emptyProducts.JoeyAny());
+        }
 
         [Test]
         public void price_than_500()
