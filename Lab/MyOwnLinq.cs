@@ -98,5 +98,20 @@ namespace Lab
                 yield return card;
             }
         }
+
+        public static bool JoeyAll<TSource>(this IEnumerable<TSource> girls, Func<TSource, bool> predicate)
+        {
+            var enumerator = girls.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var girl = enumerator.Current;
+                if (!predicate(girl))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }
