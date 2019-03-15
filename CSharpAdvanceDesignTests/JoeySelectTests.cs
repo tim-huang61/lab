@@ -46,6 +46,16 @@ namespace CSharpAdvanceDesignTests
             expected.ToExpectedObject().ShouldEqual(actual.ToList());
         }
 
+        [Test]
+        public void get_full_name()
+        {
+            var expected = new[]{ "Joey-Chen","Tom-Li","David-Chen" };
+
+            var actual = GetEmployees().JoeySelect(e => $"{e.FirstName}-{e.LastName}");
+            expected.ToExpectedObject().ShouldMatch(actual);
+            
+        }
+
         private static IEnumerable<string> GetUrls()
         {
             yield return "http://tw.yahoo.com";

@@ -32,11 +32,11 @@ namespace Lab
             }
         }
 
-        public static IEnumerable<string> JoeySelect(this IEnumerable<string> urls, Func<string, string> predicate)
+        public static IEnumerable<string> JoeySelect<TSource>(this IEnumerable<TSource> list, Func<TSource, string> predicate)
         {
-            foreach (var url in urls)
+            foreach (var item in list)
             {
-                yield return predicate(url);
+                yield return predicate(item);
             }
         }
     }
