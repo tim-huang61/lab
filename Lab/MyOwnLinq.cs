@@ -31,5 +31,13 @@ namespace Lab
                 index++;
             }
         }
+
+        public static IEnumerable<string> JoeySelect(this IEnumerable<string> urls, Func<string, string> predicate)
+        {
+            foreach (var url in urls)
+            {
+                yield return predicate(url);
+            }
+        }
     }
 }
