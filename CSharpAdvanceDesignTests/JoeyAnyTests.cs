@@ -9,19 +9,18 @@ namespace CSharpAdvanceDesignTests
     [TestFixture]
     public class JoeyAnyTests
     {
-//        [Test]
-//        public void three_employees()
-//        {
-//            var emptyEmployees = new Product[]
-//            {
-//                new Product(),
-//                new Product(),
-//                new Product(),
-//            };
-//
-//            var actual = JoeyAny(emptyEmployees);
-//            Assert.IsTrue(actual);
-//        }
+        [Test]
+        public void three_products()
+        {
+            var products = new[]
+            {
+                new Product(),
+                new Product(),
+                new Product(),
+            };
+
+            Assert.IsTrue(products.JoeyAny());
+        }
 
 //        [Test]
 //        public void empty_employees()

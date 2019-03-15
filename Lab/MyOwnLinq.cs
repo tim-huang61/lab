@@ -128,5 +128,12 @@ namespace Lab
 
             return false;
         }
+
+        public static bool JoeyAny<TSource>(this IEnumerable<TSource> products)
+        {
+            var enumerator = products.GetEnumerator();
+
+            return enumerator.MoveNext();
+        }
     }
 }
