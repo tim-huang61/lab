@@ -2,24 +2,33 @@
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using System.Collections.Generic;
+using ExpectedObjects;
+using Lab;
 
 namespace CSharpAdvanceDesignTests
 {
     [TestFixture()]
-    [Ignore("not yet")]
     public class JoeyLastOrDefaultTests
     {
         [Test]
         public void get_null_when_employees_is_empty()
         {
             var employees = new List<Employee>();
-            var actual = JoeyLastOrDefault(employees);
+            var actual = employees.JoeyLastOrDefault();
             Assert.IsNull(actual);
         }
-
-        private Employee JoeyLastOrDefault(IEnumerable<Employee> employees)
+        [Test]
+        public void get_last_Employee()
         {
-            throw new System.NotImplementedException();
+            var employees = new List<Employee>
+            {
+                new Employee{ FirstName = "Joey", LastName = "Chen"},
+                new Employee{ FirstName = "Cash", LastName = "Wu"},
+                new Employee{ FirstName = "David", LastName = "Wu"},
+            };
+            var actual = employees.JoeyLastOrDefault();
+            var expected = new Employee {FirstName = "David", LastName = "Wu"};
+            actual.ToExpectedObject().ShouldEqual(expected);
         }
     }
 }
