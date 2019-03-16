@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Lab.Entities;
 
 namespace Lab
@@ -236,6 +237,12 @@ namespace Lab
                     return false;
                 }
             }
+        }
+
+
+        public static IOrderedEnumerable<Employee> JoeyThenBy<TKey>(this IOrderedEnumerable<Employee> source, Func<Employee, TKey> p1, Comparer<TKey> @default)
+        {
+            return source.CreateOrderedEnumerable(p1, @default, false);
         }
         
         private static bool IsEnd(bool firstFlag)

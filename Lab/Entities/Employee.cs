@@ -11,6 +11,8 @@ namespace Lab.Entities
         public Role Role { get; set; }
 
         public string Phone { get; set; }
+        
+        public int Age { get; set; }
     }
 
     public class JoeyEmployeeWithPhoneEqualityComparer : IEqualityComparer<Employee>
