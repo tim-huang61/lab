@@ -186,5 +186,66 @@ namespace Lab
                 yield return predicate(firstEnumerator.Current, secondEnumerator.Current);
             }
         }
+
+        public static bool JoeySequenceEqual<TSource>(this IEnumerable<TSource> first, IEnumerable<TSource> second,
+            IEqualityComparer<TSource> comparer)
+        {
+            var firstEnumerator = first.GetEnumerator();
+            var secondEnumerator = second.GetEnumerator();
+            while (true)
+            {
+                var firstFlag = firstEnumerator.MoveNext();
+                var secondFlag = secondEnumerator.MoveNext();
+                if (IsLengthDiff(firstFlag, secondFlag))
+                {
+                    return false;
+                }
+
+                if (IsEnd(firstFlag))
+                {
+                    return true;
+                }
+
+                if (!comparer.Equals(firstEnumerator.Current, secondEnumerator.Current))
+                {
+                    return false;
+                }
+            }
+        }
+        
+        public static bool JoeySequenceEqual<TSource>(this IEnumerable<TSource> first, IEnumerable<TSource> second)
+        {
+            var firstEnumerator = first.GetEnumerator();
+            var secondEnumerator = second.GetEnumerator();
+            while (true)
+            {
+                var firstFlag = firstEnumerator.MoveNext();
+                var secondFlag = secondEnumerator.MoveNext();
+                if (IsLengthDiff(firstFlag, secondFlag))
+                {
+                    return false;
+                }
+
+                if (IsEnd(firstFlag))
+                {
+                    return true;
+                }
+
+                if (!firstEnumerator.Current.Equals(secondEnumerator.Current))
+                {
+                    return false;
+                }
+            }
+        }
+        
+        private static bool IsEnd(bool firstFlag)
+        {
+            return !firstFlag;
+        }
+
+        private static bool IsLengthDiff(bool firstFlag, bool secondFlag)
+        {
+            return firstFlag != secondFlag;
+        }
     }
 }
