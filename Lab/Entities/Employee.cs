@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Policy;
 
 namespace Lab.Entities
@@ -21,9 +22,15 @@ namespace Lab.Entities
                    && x.Phone == y.Phone;
         }
 
+        // 有人使用hash code做加總但不好，加總可能會一樣
+        // 透過匿名型別取得get hash code
+        // Tuple get hash code
         public int GetHashCode(Employee obj)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
+            // return obj.FirstName.GetHashCode() + obj.LastName.GetHashCode();
+            // return new {obj.FirstName, obj.LastName}.GetHashCode();
+            // return Tuple.Create(obj.FirstName, obj.LastName).GetHashCode();
         }
     }
 }

@@ -86,6 +86,20 @@ namespace CSharpAdvanceDesignTests
             Assert.IsTrue(actual);
         }
 
+        [Test]
+        public void dictionary_test()
+        {
+            var a = new Employee() {FirstName = "Joey", LastName = "Chen"};
+            var b = new Employee() {FirstName = "Joey", LastName = "Chen"};
+            var c = new Employee() {FirstName = "David", LastName = "Wang"};
+
+            var dictionary = new Dictionary<Employee, int>(new JoeyEmployeeWithPhoneEqualityComparer());
+            dictionary.Add(a, 1);
+            dictionary.Add(b, 2);
+            dictionary.Add(c, 3);
+        }
+
+
         //1. 可以將判斷式抽成Func 2. 實作IEqualityComparer
         private bool JoeySequenceEqual<TSource>(IEnumerable<TSource> first, IEnumerable<TSource> second)
         {
@@ -114,7 +128,8 @@ namespace CSharpAdvanceDesignTests
             }
         }
 
-        private static bool JoeySequenceEqual2<TSource>(IEnumerable<TSource> first, IEnumerable<TSource> second, IEqualityComparer<TSource> comparer)
+        private static bool JoeySequenceEqual2<TSource>(IEnumerable<TSource> first, IEnumerable<TSource> second,
+            IEqualityComparer<TSource> comparer)
         {
             var firstEnumerator = first.GetEnumerator();
             var secondEnumerator = second.GetEnumerator();
@@ -144,7 +159,8 @@ namespace CSharpAdvanceDesignTests
             return !firstFlag;
         }
 
-        private static bool IsValueDiff<TSource>(IEnumerator<TSource> firstEnumerator, IEnumerator<TSource> secondEnumerator)
+        private static bool IsValueDiff<TSource>(IEnumerator<TSource> firstEnumerator,
+            IEnumerator<TSource> secondEnumerator)
         {
             return !firstEnumerator.Current.Equals(secondEnumerator.Current);
         }
