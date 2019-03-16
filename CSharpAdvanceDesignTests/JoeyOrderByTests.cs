@@ -70,17 +70,19 @@ namespace CSharpAdvanceDesignTests
                 var index = 0;
                 for (int i = 1; i < elements.Count; i++)
                 {
-                    if (stringComparer.Compare(elements[i].LastName, minElement.LastName) < 0)
+                    var firstCompare = stringComparer.Compare(elements[i].LastName, minElement.LastName);
+                    if (firstCompare < 0)
                     {
                         minElement = elements[i];
                         index = i;
-                        continue;
                     }
-
-                    if (stringComparer.Compare(elements[i].FirstName, minElement.FirstName) < 0)
+                    else if (firstCompare == 0)
                     {
-                        minElement = elements[i];
-                        index = i;
+                        if (stringComparer.Compare(elements[i].FirstName, minElement.FirstName) < 0)
+                        {
+                            minElement = elements[i];
+                            index = i;
+                        }
                     }
                 }
 
