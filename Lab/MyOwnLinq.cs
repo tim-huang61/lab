@@ -84,7 +84,8 @@ namespace Lab
             }
         }
 
-        public static IEnumerable<TSource> JoeyTakeWhile<TSource>(this IEnumerable<TSource> cards, Func<TSource, bool> predicate)
+        public static IEnumerable<TSource> JoeyTakeWhile<TSource>(this IEnumerable<TSource> cards,
+            Func<TSource, bool> predicate)
         {
             var enumerator = cards.GetEnumerator();
             while (enumerator.MoveNext())
@@ -134,6 +135,28 @@ namespace Lab
             var enumerator = products.GetEnumerator();
 
             return enumerator.MoveNext();
+        }
+
+        public static T JoeyFirstOrDefault<T>(this IEnumerable<T> items)
+        {
+            var enumerator = items.GetEnumerator();
+
+            return enumerator.MoveNext() ? enumerator.Current : default(T);
+        }
+
+        public static T JoeyFirstOrDefault<T>(this IEnumerable<T> items, Func<T, bool> predicate)
+        {
+            var enumerator = items.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var current = enumerator.Current;
+                if (predicate(current))
+                {
+                    return current;
+                }
+            }
+
+            return default(T);
         }
     }
 }
