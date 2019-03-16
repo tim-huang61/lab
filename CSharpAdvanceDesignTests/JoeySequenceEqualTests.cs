@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using Lab.Entities;
 
 namespace CSharpAdvanceDesignTests
 {
@@ -63,7 +64,30 @@ namespace CSharpAdvanceDesignTests
             Assert.IsFalse(actual);
         }
 
-        private bool JoeySequenceEqual(IEnumerable<int> first, IEnumerable<int> second)
+        [Test]
+        public void two_employees()
+        {
+            var first = new List<Employee>
+            {
+                new Employee() {FirstName = "Joey", LastName = "Chen"},
+                new Employee() {FirstName = "Tom", LastName = "Li"},
+                new Employee() {FirstName = "David", LastName = "Wang"},
+            };
+
+            var second = new List<Employee>
+            {
+                new Employee() {FirstName = "Joey", LastName = "Chen"},
+                new Employee() {FirstName = "Tom", LastName = "Li"},
+                new Employee() {FirstName = "David", LastName = "Wang"},
+            };
+
+            var actual = JoeySequenceEqual2(first, second, new JoeyEmployeeWithPhoneEqualityComparer());
+
+            Assert.IsTrue(actual);
+        }
+
+        //1. 可以將判斷式抽成Func 2. 實作IEqualityComparer
+        private bool JoeySequenceEqual<TSource>(IEnumerable<TSource> first, IEnumerable<TSource> second)
         {
             var firstEnumerator = first.GetEnumerator();
             var secondEnumerator = second.GetEnumerator();
@@ -76,7 +100,29 @@ namespace CSharpAdvanceDesignTests
                     return false;
                 }
 
-                if (IsValueDiff(firstEnumerator, secondEnumerator))
+                if (IsEnd(firstFlag))
+                {
+                    return true;
+                }
+
+                var firstEnumeratorCurrent = firstEnumerator.Current;
+                var secondEnumeratorCurrent = secondEnumerator.Current;
+                if (!firstEnumeratorCurrent.Equals(secondEnumeratorCurrent))
+                {
+                    return false;
+                }
+            }
+        }
+
+        private static bool JoeySequenceEqual2<TSource>(IEnumerable<TSource> first, IEnumerable<TSource> second, IEqualityComparer<TSource> comparer)
+        {
+            var firstEnumerator = first.GetEnumerator();
+            var secondEnumerator = second.GetEnumerator();
+            while (true)
+            {
+                var firstFlag = firstEnumerator.MoveNext();
+                var secondFlag = secondEnumerator.MoveNext();
+                if (IsLengthDiff(firstFlag, secondFlag))
                 {
                     return false;
                 }
@@ -85,20 +131,25 @@ namespace CSharpAdvanceDesignTests
                 {
                     return true;
                 }
+
+                if (!comparer.Equals(firstEnumerator.Current, secondEnumerator.Current))
+                {
+                    return false;
+                }
             }
         }
 
-        private bool IsEnd(bool firstFlag)
+        private static bool IsEnd(bool firstFlag)
         {
             return !firstFlag;
         }
 
-        private bool IsValueDiff(IEnumerator<int> firstEnumerator, IEnumerator<int> secondEnumerator)
+        private static bool IsValueDiff<TSource>(IEnumerator<TSource> firstEnumerator, IEnumerator<TSource> secondEnumerator)
         {
-            return firstEnumerator.Current != secondEnumerator.Current;
+            return !firstEnumerator.Current.Equals(secondEnumerator.Current);
         }
 
-        private bool IsLengthDiff(bool firstFlag, bool secondFlag)
+        private static bool IsLengthDiff(bool firstFlag, bool secondFlag)
         {
             return firstFlag != secondFlag;
         }
