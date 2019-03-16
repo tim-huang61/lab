@@ -67,19 +67,17 @@ namespace CSharpAdvanceDesignTests
         {
             var firstEnumerator = first.GetEnumerator();
             var secondEnumerator = second.GetEnumerator();
-            while (firstEnumerator.MoveNext() && secondEnumerator.MoveNext())
+            var firstMove = false;
+            var secondMove = false;
+            while ((firstMove = firstEnumerator.MoveNext()) & (secondMove = secondEnumerator.MoveNext()))
             {
-                var firstEnumeratorCurrent = firstEnumerator.Current;
-                var secondEnumeratorCurrent = secondEnumerator.Current;
-                if (!(firstEnumerator.MoveNext() && firstEnumerator.MoveNext()))
+                if (firstEnumerator.Current != secondEnumerator.Current)
                 {
                     return false;
                 }
-                
-                return firstEnumeratorCurrent == secondEnumeratorCurrent;
             }
 
-            return true;
+            return firstMove == secondMove;
         }
     }
 }
