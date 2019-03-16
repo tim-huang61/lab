@@ -51,6 +51,17 @@ namespace CSharpAdvanceDesignTests
 
             Assert.IsTrue(actual);
         }
+        
+        [Test]
+        public void compare_two_numbers_equal5()
+        {
+            var first = new List<int> { 3,2};
+            var second = new List<int> { 3,2,0};
+
+            var actual = JoeySequenceEqual(first, second);
+
+            Assert.IsFalse(actual);
+        }
 
         private bool JoeySequenceEqual(IEnumerable<int> first, IEnumerable<int> second)
         {
