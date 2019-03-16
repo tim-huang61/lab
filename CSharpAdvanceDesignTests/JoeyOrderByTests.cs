@@ -8,6 +8,18 @@ using System.Linq;
 
 namespace CSharpAdvanceDesignTests
 {
+    public class CombineKeyComparer
+    {
+        public CombineKeyComparer(Func<Employee, string> keySelector, IComparer<string> keyCompare)
+        {
+            KeySelector = keySelector;
+            KeyCompare = keyCompare;
+        }
+
+        public Func<Employee, string> KeySelector { get; private set; }
+        public IComparer<string> KeyCompare { get; private set; }
+    }
+
     [TestFixture]
     public class JoeyOrderByTests
     {
@@ -23,8 +35,11 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "Joey", LastName = "Chen"},
             };
 
-            Comparer<string> firstKeyCompare = Comparer<string>.Default;
-            var actual = JoeyOrderByLastName(employees, employee => employee.LastName, firstKeyCompare, employee1 => employee1.FirstName, firstKeyCompare);
+            IComparer<string> firstKeyCompare = Comparer<string>.Default;
+            Func<Employee, string> secondKeySelector = employee1 => employee1.FirstName;
+            var actual = JoeyOrderByLastName(employees,
+                new CombineKeyComparer(employee => employee.LastName, firstKeyCompare),
+                new CombineKeyComparer(secondKeySelector, firstKeyCompare));
 
             var expected = new[]
             {
@@ -48,8 +63,11 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "Joey", LastName = "Chen"},
             };
 
-            Comparer<string> firstKeyCompare = Comparer<string>.Default;
-            var actual = JoeyOrderByLastName(employees, employee => employee.LastName, firstKeyCompare, employee1 => employee1.FirstName, firstKeyCompare);
+            IComparer<string> firstKeyCompare = Comparer<string>.Default;
+            Func<Employee, string> secondKeySelector = employee1 => employee1.FirstName;
+            var actual = JoeyOrderByLastName(employees,
+                new CombineKeyComparer(employee => employee.LastName, firstKeyCompare),
+                new CombineKeyComparer(secondKeySelector, firstKeyCompare));
             var expected = new[]
             {
                 new Employee {FirstName = "Joey", LastName = "Chen"},
@@ -62,11 +80,8 @@ namespace CSharpAdvanceDesignTests
             expected.ToExpectedObject().ShouldMatch(actual);
         }
 
-        private IEnumerable<Employee> JoeyOrderByLastName(IEnumerable<Employee> employees, 
-            Func<Employee, string> firstKeySelector, 
-            Comparer<string> firstKeyCompare, 
-            Func<Employee, string> secondKeySelector, 
-            Comparer<string> secondKeyCompare)
+        private IEnumerable<Employee> JoeyOrderByLastName(IEnumerable<Employee> employees,
+            CombineKeyComparer firstComparer, CombineKeyComparer secondComparer)
         {
             var elements = employees.ToList();
             while (elements.Any())
@@ -76,14 +91,17 @@ namespace CSharpAdvanceDesignTests
                 for (int i = 1; i < elements.Count; i++)
                 {
                     var employee = elements[i];
-                    if (firstKeyCompare.Compare(firstKeySelector(employee), firstKeySelector(minElement)) < 0)
+                    if (firstComparer.KeyCompare.Compare(firstComparer.KeySelector(employee),
+                            firstComparer.KeySelector(minElement)) < 0)
                     {
                         minElement = employee;
                         index = i;
                     }
-                    else if (firstKeyCompare.Compare(firstKeySelector(employee), firstKeySelector(minElement)) == 0)
+                    else if (firstComparer.KeyCompare.Compare(firstComparer.KeySelector(employee),
+                                 firstComparer.KeySelector(minElement)) == 0)
                     {
-                        if (secondKeyCompare.Compare(secondKeySelector(employee), secondKeySelector(minElement)) < 0)
+                        if (secondComparer.KeyCompare.Compare(secondComparer.KeySelector(employee),
+                                secondComparer.KeySelector(minElement)) < 0)
                         {
                             minElement = employee;
                             index = i;
