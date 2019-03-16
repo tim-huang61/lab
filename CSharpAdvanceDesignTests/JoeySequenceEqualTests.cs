@@ -51,12 +51,12 @@ namespace CSharpAdvanceDesignTests
 
             Assert.IsTrue(actual);
         }
-        
+
         [Test]
         public void compare_two_numbers_equal5()
         {
-            var first = new List<int> { 3,2};
-            var second = new List<int> { 3,2,0};
+            var first = new List<int> {3, 2};
+            var second = new List<int> {3, 2, 0};
 
             var actual = JoeySequenceEqual(first, second);
 
@@ -67,17 +67,40 @@ namespace CSharpAdvanceDesignTests
         {
             var firstEnumerator = first.GetEnumerator();
             var secondEnumerator = second.GetEnumerator();
-            var firstMove = false;
-            var secondMove = false;
-            while ((firstMove = firstEnumerator.MoveNext()) & (secondMove = secondEnumerator.MoveNext()))
+            while (true)
             {
-                if (firstEnumerator.Current != secondEnumerator.Current)
+                var firstFlag = firstEnumerator.MoveNext();
+                var secondFlag = secondEnumerator.MoveNext();
+                if (IsLengthDiff(firstFlag, secondFlag))
                 {
                     return false;
                 }
-            }
 
-            return firstMove == secondMove;
+                if (IsValueDiff(firstEnumerator, secondEnumerator))
+                {
+                    return false;
+                }
+
+                if (IsEnd(firstFlag))
+                {
+                    return true;
+                }
+            }
+        }
+
+        private bool IsEnd(bool firstFlag)
+        {
+            return !firstFlag;
+        }
+
+        private bool IsValueDiff(IEnumerator<int> firstEnumerator, IEnumerator<int> secondEnumerator)
+        {
+            return firstEnumerator.Current != secondEnumerator.Current;
+        }
+
+        private bool IsLengthDiff(bool firstFlag, bool secondFlag)
+        {
+            return firstFlag != secondFlag;
         }
     }
 }
