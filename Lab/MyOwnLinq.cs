@@ -170,5 +170,10 @@ namespace Lab
 
             return item;
         }
+
+        public static IEnumerable<TSource> JoeyReverse<TSource>(this IEnumerable<TSource> source)
+        {
+            return new Stack<TSource>(source);
+        }
     }
 }

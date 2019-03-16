@@ -1,12 +1,14 @@
-﻿using ExpectedObjects;
+﻿using System.Collections;
+using ExpectedObjects;
 using Lab.Entities;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
+using Lab;
 
 namespace CSharpAdvanceDesignTests
 {
     [TestFixture]
-    [Ignore("not yet")]
     public class JoeyReverseTests
     {
         [Test]
@@ -14,26 +16,30 @@ namespace CSharpAdvanceDesignTests
         {
             var employees = new List<Employee>
             {
-                new Employee(){FirstName = "Joey",LastName = "Chen"},
-                new Employee(){FirstName = "Tom",LastName = "Li"},
-                new Employee(){FirstName = "David",LastName = "Wang"},
+                new Employee() {FirstName = "Joey", LastName = "Chen"},
+                new Employee() {FirstName = "Tom", LastName = "Li"},
+                new Employee() {FirstName = "David", LastName = "Wang"},
             };
 
-            var actual = JoeyReverse(employees);
+            var actual = employees.JoeyReverse();
 
             var expected = new List<Employee>
             {
-                new Employee(){FirstName = "David",LastName = "Wang"},
-                new Employee(){FirstName = "Tom",LastName = "Li"},
-                new Employee(){FirstName = "Joey",LastName = "Chen"},
+                new Employee() {FirstName = "David", LastName = "Wang"},
+                new Employee() {FirstName = "Tom", LastName = "Li"},
+                new Employee() {FirstName = "Joey", LastName = "Chen"},
             };
 
             expected.ToExpectedObject().ShouldMatch(actual);
         }
 
-        private IEnumerable<Employee> JoeyReverse(IEnumerable<Employee> employees)
+        [Test]
+        public void reserve_nums()
         {
-            throw new System.NotImplementedException();
+            var nums = new[] {1, 2, 3};
+            var actual = nums.JoeyReverse();
+
+            new[] {3, 2, 1}.ToExpectedObject().ShouldMatch(actual);
         }
     }
 }
