@@ -162,7 +162,7 @@ namespace Lab
         public static TSource JoeyLastOrDefault<TSource>(this IEnumerable<TSource> employees)
         {
             var enumerator = employees.GetEnumerator();
-            var item = default(TSource); 
+            var item = default(TSource);
             while (enumerator.MoveNext())
             {
                 item = enumerator.Current;
@@ -174,6 +174,17 @@ namespace Lab
         public static IEnumerable<TSource> JoeyReverse<TSource>(this IEnumerable<TSource> source)
         {
             return new Stack<TSource>(source);
+        }
+
+        public static IEnumerable<TResult> JoeyZip<TFirst, TSecond, TResult>(this IEnumerable<TFirst> first
+            , IEnumerable<TSecond> second, Func<TFirst, TSecond, TResult> predicate)
+        {
+            var firstEnumerator = first.GetEnumerator();
+            var secondEnumerator = second.GetEnumerator();
+            while (firstEnumerator.MoveNext() && secondEnumerator.MoveNext())
+            {
+                yield return predicate(firstEnumerator.Current, secondEnumerator.Current);
+            }
         }
     }
 }
