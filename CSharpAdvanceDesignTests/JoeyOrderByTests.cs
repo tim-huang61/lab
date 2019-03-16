@@ -16,8 +16,8 @@ namespace CSharpAdvanceDesignTests
             KeyCompare = keyCompare;
         }
 
-        public Func<Employee, string> KeySelector { get; private set; }
-        public IComparer<string> KeyCompare { get; private set; }
+        private Func<Employee, string> KeySelector { get; }
+        private IComparer<string> KeyCompare { get; }
 
         public int Compare(Employee employee, Employee minElement)
         {
@@ -86,7 +86,7 @@ namespace CSharpAdvanceDesignTests
         }
 
         private IEnumerable<Employee> JoeyOrderByLastName(IEnumerable<Employee> employees,
-            CombineKeyComparer firstComparer, CombineKeyComparer secondComparer)
+            IComparer<Employee> firstComparer, IComparer<Employee> secondComparer)
         {
             var elements = employees.ToList();
             while (elements.Any())
@@ -104,8 +104,7 @@ namespace CSharpAdvanceDesignTests
                     }
                     else if (firstCompareResult == 0)
                     {
-                        if (secondComparer.KeyCompare.Compare(secondComparer.KeySelector(employee),
-                                secondComparer.KeySelector(minElement)) < 0)
+                        if (secondComparer.Compare(employee, minElement) < 0)
                         {
                             minElement = employee;
                             index = i;
