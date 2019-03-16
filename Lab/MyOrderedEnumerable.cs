@@ -6,26 +6,26 @@ using Lab.Entities;
 
 namespace Lab
 {
-    public class MyOrderedEnumerable : IOrderedEnumerable<Employee>
+    public class MyOrderedEnumerable<TSource> : IOrderedEnumerable<TSource>
     {
-        private readonly IEnumerable<Employee> _employees;
-        private readonly IComparer<Employee> _combineKeyComparer;
+        private readonly IEnumerable<TSource> _employees;
+        private readonly IComparer<TSource> _combineKeyComparer;
 
-        public MyOrderedEnumerable(IEnumerable<Employee> employees, IComparer<Employee> combineKeyComparer)
+        public MyOrderedEnumerable(IEnumerable<TSource> employees, IComparer<TSource> combineKeyComparer)
         {
             _employees = employees;
             _combineKeyComparer = combineKeyComparer;
         }
 
-        public IOrderedEnumerable<Employee> CreateOrderedEnumerable<TKey>(Func<Employee, TKey> keySelector,
+        public IOrderedEnumerable<TSource> CreateOrderedEnumerable<TKey>(Func<TSource, TKey> keySelector,
             IComparer<TKey> comparer, bool @descending)
         {
-            var combineKeyComparer = new CombineKeyComparer<TKey>(keySelector, comparer);
+            var combineKeyComparer = new CombineKeyComparer<TKey, TSource>(keySelector, comparer);
 
-            return new MyOrderedEnumerable(_employees, new ComboCompare(_combineKeyComparer, combineKeyComparer));
+            return new MyOrderedEnumerable<TSource>(_employees, new ComboCompare<TSource>(_combineKeyComparer, combineKeyComparer));
         }
 
-        public IEnumerator<Employee> GetEnumerator()
+        public IEnumerator<TSource> GetEnumerator()
         {
             var elements = _employees.ToList();
             while (elements.Any())

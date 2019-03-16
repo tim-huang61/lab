@@ -254,5 +254,11 @@ namespace Lab
         {
             return firstFlag != secondFlag;
         }
+
+        public static IOrderedEnumerable<TSource> JoeyOrderByKeepCompare<TKey, TSource>(this IEnumerable<TSource> employees,
+            Func<TSource, TKey> predicate, Comparer<TKey> compare)
+        {
+            return new MyOrderedEnumerable<TSource>(employees, new CombineKeyComparer<TKey, TSource>(predicate, compare));
+        }
     }
 }
