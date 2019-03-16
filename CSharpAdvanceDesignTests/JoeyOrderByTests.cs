@@ -30,13 +30,13 @@ namespace CSharpAdvanceDesignTests
 //                new ComboCompare(new CombineKeyComparer<string>(employee => employee.LastName, firstKeyCompare),
 //                    new CombineKeyComparer<string>(secondKeySelector, firstKeyCompare)));
 
-            var actual = JoeyOrderByKeepCompare(employees, e => e.LastName, Comparer<string>.Default);
-                //.JoeyThenBy(e => e.FirstName, Comparer<string>.Default);
+            var actual = JoeyOrderByKeepCompare(employees, e => e.LastName, Comparer<string>.Default)
+                .JoeyThenBy(e => e.FirstName, Comparer<string>.Default);
 
             var expected = new[]
             {
-                new Employee {FirstName = "Joseph", LastName = "Chen"},
                 new Employee {FirstName = "Joey", LastName = "Chen"},
+                new Employee {FirstName = "Joseph", LastName = "Chen"},
                 new Employee {FirstName = "Tom", LastName = "Li"},
                 new Employee {FirstName = "Joey", LastName = "Wang"},
             };
@@ -88,7 +88,7 @@ namespace CSharpAdvanceDesignTests
 
         private IOrderedEnumerable<Employee> JoeyOrderByKeepCompare<TKey>(IEnumerable<Employee> employees, Func<Employee, TKey> predicate, Comparer<TKey> compare)
         {
-            return new MyOrderedEnumerable<TKey>(employees, new CombineKeyComparer<TKey>(predicate, compare));
+            return new MyOrderedEnumerable(employees, new CombineKeyComparer<TKey>(predicate, compare));
         }
 
         private IEnumerable<Employee> JoeyOrderBy(IEnumerable<Employee> employees, ComboCompare comboCompare)

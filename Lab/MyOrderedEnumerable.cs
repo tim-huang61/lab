@@ -6,22 +6,23 @@ using Lab.Entities;
 
 namespace Lab
 {
-    public class MyOrderedEnumerable<TKey> : IOrderedEnumerable<Employee>
+    public class MyOrderedEnumerable : IOrderedEnumerable<Employee>
     {
         private readonly IEnumerable<Employee> _employees;
-        private readonly CombineKeyComparer<TKey> _combineKeyComparer;
+        private readonly IComparer<Employee> _combineKeyComparer;
 
-        public MyOrderedEnumerable(IEnumerable<Employee> employees, CombineKeyComparer<TKey> combineKeyComparer)
+        public MyOrderedEnumerable(IEnumerable<Employee> employees, IComparer<Employee> combineKeyComparer)
         {
             _employees = employees;
             _combineKeyComparer = combineKeyComparer;
         }
-        
-        public IOrderedEnumerable<Employee> CreateOrderedEnumerable<TKey>(Func<Employee, TKey> keySelector, IComparer<TKey> comparer, bool @descending)
+
+        public IOrderedEnumerable<Employee> CreateOrderedEnumerable<TKey>(Func<Employee, TKey> keySelector,
+            IComparer<TKey> comparer, bool @descending)
         {
             var combineKeyComparer = new CombineKeyComparer<TKey>(keySelector, comparer);
-            
-            return new MyOrderedEnumerable<TKey>(_employees, combineKeyComparer);
+
+            return new MyOrderedEnumerable(_employees, new ComboCompare(_combineKeyComparer, combineKeyComparer));
         }
 
         public IEnumerator<Employee> GetEnumerator()
