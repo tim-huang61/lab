@@ -21,7 +21,7 @@ namespace CSharpAdvanceDesignTests
            var actual = JoeySelectMany(cities, 
                city => city.Sections, 
                (city1, section) => $"{city1.Name}-{section}");
-//            var actual = cities.SelectMany(c => c.Sections.Select(s => $"{c.Name}-{s}"));
+            actual = cities.SelectMany(c => c.Sections.Select(s => $"{c.Name}-{s}"));
 
             var expected = new[]
             {

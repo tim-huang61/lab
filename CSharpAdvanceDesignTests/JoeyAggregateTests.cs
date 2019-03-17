@@ -1,9 +1,10 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CSharpAdvanceDesignTests
 {
-    [Ignore("not yet")]
+//    [Ignore("not yet")]
     [TestFixture]
     public class JoeyAggregateTests
     {
@@ -17,6 +18,7 @@ namespace CSharpAdvanceDesignTests
                 30, 80, 20, 40, 25
             };
 
+//            drawlingList.Aggregate()
             var actual = JoeyAggregate(drawlingList, balance);
 
             var expected = 10.91m;
@@ -26,7 +28,17 @@ namespace CSharpAdvanceDesignTests
 
         private decimal JoeyAggregate(IEnumerable<int> drawlingList, decimal balance)
         {
-            throw new System.NotImplementedException();
+            var enumerator = drawlingList.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var current = enumerator.Current;
+                if (balance >= current)
+                {
+                    balance -= current;
+                }
+            }
+
+            return balance;
         }
     }
 }
