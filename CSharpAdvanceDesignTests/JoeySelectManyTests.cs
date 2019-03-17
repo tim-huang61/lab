@@ -3,7 +3,6 @@ using ExpectedObjects;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using Lab;
 
 namespace CSharpAdvanceDesignTests
 {
@@ -19,8 +18,10 @@ namespace CSharpAdvanceDesignTests
                 new City {Name = "新北市", Sections = new List<string> {"三重", "新莊"}},
             };
 
-            var actual = JoeySelectMany(cities, city => city.Sections.JoeySelect(section=>$"{city.Name}-{section}"));
-            //var actual = cities.SelectMany(c => c.Sections.Select(s => $"{c.Name}-{s}"));
+           var actual = JoeySelectMany(cities, 
+               city => city.Sections, 
+               (city1, section) => $"{city1.Name}-{section}");
+//            var actual = cities.SelectMany(c => c.Sections.Select(s => $"{c.Name}-{s}"));
 
             var expected = new[]
             {
@@ -34,16 +35,17 @@ namespace CSharpAdvanceDesignTests
             expected.ToExpectedObject().ShouldMatch(actual);
         }
 
-        private IEnumerable<string> JoeySelectMany(IEnumerable<City> cities, Func<City, IEnumerable<string>> predicate)
+        private IEnumerable<string> JoeySelectMany(IEnumerable<City> cities, 
+            Func<City, List<string>> collectionSelector, 
+            Func<City, string, string> resultSelector)
         {
             var enumerator = cities.GetEnumerator();
             while (enumerator.MoveNext())
             {
                 var city = enumerator.Current;
-                
-                foreach (var s in predicate(city))
+                foreach (var section in collectionSelector(city))
                 {
-                    yield return s;
+                    yield return resultSelector(city, section);
                 }
             }
         }
