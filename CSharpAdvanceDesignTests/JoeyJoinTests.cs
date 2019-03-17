@@ -3,6 +3,7 @@ using Lab.Entities;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CSharpAdvanceDesignTests
 {
@@ -12,9 +13,9 @@ namespace CSharpAdvanceDesignTests
         [Test]
         public void all_pets_and_owner()
         {
-            var david = new Employee { FirstName = "David", LastName = "Chen" };
-            var joey = new Employee { FirstName = "Joey", LastName = "Chen" };
-            var tom = new Employee { FirstName = "Tom", LastName = "Chen" };
+            var david = new Employee {FirstName = "David", LastName = "Chen"};
+            var joey = new Employee {FirstName = "Joey", LastName = "Chen"};
+            var tom = new Employee {FirstName = "Tom", LastName = "Chen"};
 
             var employees = new[]
             {
@@ -33,6 +34,9 @@ namespace CSharpAdvanceDesignTests
 
             var actual = JoeyJoin(employees, pets);
 
+            employees.Join(pets, employee => employee.FirstName, pet => pet.Owner.FirstName,
+                (employee, pet) => Tuple.Create(employee.FirstName, pet.Name));
+
             var expected = new[]
             {
                 Tuple.Create("David", "Didi"),
@@ -47,18 +51,20 @@ namespace CSharpAdvanceDesignTests
         private IEnumerable<Tuple<string, string>> JoeyJoin(IEnumerable<Employee> employees, IEnumerable<Pet> pets)
         {
             var enumerator = employees.GetEnumerator();
+            var petEnumerator = pets.GetEnumerator();
             while (enumerator.MoveNext())
             {
                 var current = enumerator.Current;
-                var petEnumerator = pets.GetEnumerator();
                 while (petEnumerator.MoveNext())
                 {
                     var pet = petEnumerator.Current;
-                    if (pet.Owner.FirstName == current.FirstName)
+                    if (pet.Owner.Equals(current))
                     {
                         yield return new Tuple<string, string>(current.FirstName, pet.Name);
                     }
-                } 
+                }
+
+                petEnumerator.Reset();
             }
         }
     }
