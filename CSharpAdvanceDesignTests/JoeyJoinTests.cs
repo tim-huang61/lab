@@ -32,7 +32,8 @@ namespace CSharpAdvanceDesignTests
                 new Pet() {Name = "QQ", Owner = joey},
             };
 
-            var actual = JoeyJoin(employees, pets);
+            var actual = JoeyJoin(employees, pets,
+                (current, pet1) => new Tuple<string, string>(current.FirstName, pet1.Name));
 
             employees.Join(pets, employee => employee.FirstName, pet => pet.Owner.FirstName,
                 (employee, pet) => Tuple.Create(employee.FirstName, pet.Name));
@@ -48,7 +49,44 @@ namespace CSharpAdvanceDesignTests
             expected.ToExpectedObject().ShouldMatch(actual);
         }
 
-        private IEnumerable<Tuple<string, string>> JoeyJoin(IEnumerable<Employee> employees, IEnumerable<Pet> pets)
+        [Test]
+        public void all_pets_and_owner_with_fullName()
+        {
+            var david = new Employee {FirstName = "David", LastName = "Li"};
+            var joey = new Employee {FirstName = "Joey", LastName = "Chen"};
+            var tom = new Employee {FirstName = "Tom", LastName = "Wang"};
+
+            var employees = new[]
+            {
+                david,
+                joey,
+                tom
+            };
+
+            var pets = new Pet[]
+            {
+                new Pet() {Name = "Lala", Owner = joey},
+                new Pet() {Name = "Didi", Owner = david},
+                new Pet() {Name = "Fufu", Owner = tom},
+                new Pet() {Name = "QQ", Owner = joey},
+            };
+
+            var actual = JoeyJoin(employees, pets, (employee, pet) => $"{pet.Name}-{employee.LastName}");
+
+            var expected = new[]
+            {
+                "Didi-Li",
+                "Lala-Chen",
+                "QQ-Chen",
+                "Fufu-Wang",
+            };
+
+            expected.ToExpectedObject().ShouldMatch(actual);
+        }
+
+
+        private IEnumerable<TResult> JoeyJoin<TResult>(IEnumerable<Employee> employees, IEnumerable<Pet> pets,
+            Func<Employee, Pet, TResult> selector)
         {
             var enumerator = employees.GetEnumerator();
             var petEnumerator = pets.GetEnumerator();
@@ -60,7 +98,7 @@ namespace CSharpAdvanceDesignTests
                     var pet = petEnumerator.Current;
                     if (pet.Owner.Equals(current))
                     {
-                        yield return new Tuple<string, string>(current.FirstName, pet.Name);
+                        yield return selector(current, pet);
                     }
                 }
 
