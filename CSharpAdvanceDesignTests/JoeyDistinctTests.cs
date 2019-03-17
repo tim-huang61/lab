@@ -2,11 +2,11 @@
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CSharpAdvanceDesignTests
 {
     [TestFixture()]
-    [Ignore("not yet")]
     public class JoeyDistinctTests
     {
         [Test]
@@ -22,7 +22,17 @@ namespace CSharpAdvanceDesignTests
 
         private IEnumerable<int> Distinct(IEnumerable<int> numbers)
         {
-            throw new System.NotImplementedException();
+            var enumerator = numbers.GetEnumerator();
+            var dictionary = new Dictionary<int,int>();
+            while (enumerator.MoveNext())
+            {
+                var current = enumerator.Current;
+                if (!dictionary.TryGetValue(current, out var value))
+                {
+                    dictionary.Add(current, current);
+                    yield return current;
+                }
+            }
         }
     }
 }
