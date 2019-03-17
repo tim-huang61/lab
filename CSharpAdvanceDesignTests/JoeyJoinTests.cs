@@ -121,12 +121,12 @@ namespace CSharpAdvanceDesignTests
         }
 
         
-        private IEnumerable<TResult> JoeyJoin<TResult, TKey>(IEnumerable<Employee> outer,
-            IEnumerable<Pet> inner,
-            Func<Employee, TKey> outerSelector,
-            Func<Pet, TKey> innerSelector,
+        private IEnumerable<TResult> JoeyJoin<TOuter,TInner,TKey, TResult>(IEnumerable<TOuter> outer,
+            IEnumerable<TInner> inner,
+            Func<TOuter, TKey> outerSelector,
+            Func<TInner, TKey> innerSelector,
             IEqualityComparer<TKey> equalityComparer,
-            Func<Employee, Pet, TResult> selector)
+            Func<TOuter, TInner, TResult> selector)
         {
             var outerEnumerator = outer.GetEnumerator();
             var innerEnumerator = inner.GetEnumerator();
