@@ -47,15 +47,5 @@ namespace CSharpAdvanceDesignTests
 
             return seed;
         }
-
-        private static decimal Dawling(decimal seed, int current)
-        {
-            if (seed >= current)
-            {
-                seed -= current;
-            }
-
-            return seed;
-        }
     }
 }
