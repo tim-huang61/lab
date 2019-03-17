@@ -22,17 +22,7 @@ namespace CSharpAdvanceDesignTests
 
         private IEnumerable<int> Distinct(IEnumerable<int> numbers)
         {
-            var enumerator = numbers.GetEnumerator();
-            var dictionary = new Dictionary<int,int>();
-            while (enumerator.MoveNext())
-            {
-                var current = enumerator.Current;
-                if (!dictionary.TryGetValue(current, out var value))
-                {
-                    dictionary.Add(current, current);
-                    yield return current;
-                }
-            }
+           return new HashSet<int>(numbers);
         }
     }
 }
