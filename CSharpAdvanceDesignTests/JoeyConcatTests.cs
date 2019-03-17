@@ -37,7 +37,7 @@ namespace CSharpAdvanceDesignTests
             expected.ToExpectedObject().ShouldMatch(actual);
         }
 
-        private IEnumerable<Employee> JoeyConcat(IEnumerable<Employee> first, IEnumerable<Employee> second)
+        private IEnumerable<Employee> JoeyConcat<Employee>(IEnumerable<Employee> first, IEnumerable<Employee> second)
         {
             var firstEnumerator = first.GetEnumerator();
             while (firstEnumerator.MoveNext())
