@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using Lab;
 
 namespace CSharpAdvanceDesignTests
 {
@@ -39,19 +40,6 @@ namespace CSharpAdvanceDesignTests
             }
 
             return false;
-        }
-    }
-
-    public class JoeyEmployeeEqualityComparer : IEqualityComparer<Employee>
-    {
-        public bool Equals(Employee x, Employee y)
-        {
-            return x.LastName == y.LastName && x.FirstName == y.FirstName;
-        }
-
-        public int GetHashCode(Employee obj)
-        {
-            return new {obj.LastName, obj.FirstName}.GetHashCode();
         }
     }
 }

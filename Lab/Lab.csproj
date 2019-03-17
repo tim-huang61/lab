@@ -53,6 +53,7 @@
     <Compile Include="Entities\Product.cs" />
     <Compile Include="Entities\Role.cs" />
     <Compile Include="IValidator.cs" />
+    <Compile Include="JoeyEmployeeEqualityComparer.cs" />
     <Compile Include="MyOrderedEnumerable.cs" />
     <Compile Include="MyOwnLinq.cs" />
     <Compile Include="ProductValidator.cs" />
