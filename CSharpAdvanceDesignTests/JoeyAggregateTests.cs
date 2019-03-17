@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,26 +20,42 @@ namespace CSharpAdvanceDesignTests
             };
 
 //            drawlingList.Aggregate()
-            var actual = JoeyAggregate(drawlingList, balance);
+            var actual = JoeyAggregate(drawlingList, balance, (seed, current) =>
+            {
+                if (seed >= current)
+                {
+                    seed -= current;
+                }
+
+                return seed;
+            });
 
             var expected = 10.91m;
 
             Assert.AreEqual(expected, actual);
         }
 
-        private decimal JoeyAggregate(IEnumerable<int> drawlingList, decimal balance)
+        private decimal JoeyAggregate(IEnumerable<int> drawlingList, decimal balance, Func<decimal, int, decimal> dawling)
         {
+            var seed = balance;
             var enumerator = drawlingList.GetEnumerator();
             while (enumerator.MoveNext())
             {
                 var current = enumerator.Current;
-                if (balance >= current)
-                {
-                    balance -= current;
-                }
+                seed = dawling(seed, current);
             }
 
-            return balance;
+            return seed;
+        }
+
+        private static decimal Dawling(decimal seed, int current)
+        {
+            if (seed >= current)
+            {
+                seed -= current;
+            }
+
+            return seed;
         }
     }
 }
