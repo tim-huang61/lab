@@ -23,7 +23,7 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "David", LastName = "Lee"},
             };
 
-            var actual = JoeyGroupBy(employees);
+            var actual = JoeyGroupBy(employees, employee => employee.LastName);
             Assert.AreEqual(2, actual.Count());
             var firstGroup = new List<Employee>
             {
@@ -35,26 +35,46 @@ namespace CSharpAdvanceDesignTests
             firstGroup.ToExpectedObject().ShouldMatch(actual.First().ToList());
         }
 
-        private IEnumerable<IGrouping<string, Employee>> JoeyGroupBy(IEnumerable<Employee> employees)
+        private IEnumerable<IGrouping<string, Employee>> JoeyGroupBy(IEnumerable<Employee> employees, Func<Employee, string> keySelector)
         {
-            var lookup = new Dictionary<string, List<Employee>>();
-            var enumerator = employees.GetEnumerator();
-            while (enumerator.MoveNext())
+            var myLookup = new MyLookup();
+            foreach (var employee in employees)
             {
-                var employee = enumerator.Current;
-                if (lookup.ContainsKey(employee.LastName))
-                {
-                    lookup[employee.LastName].Add(employee);
-                }
-                else
-                {
-                    lookup.Add(employee.LastName, new List<Employee> {employee});
-                }
+                myLookup.AddElement(keySelector(employee), employee);
             }
+            
+            return myLookup;
+        }
+    }
 
-            return ConvertMultiGrouping(lookup);
+    internal class MyLookup : IEnumerable<IGrouping<string, Employee>>
+    {
+        private readonly IEnumerable<Employee> employees;
+        private readonly Func<Employee, string> keySelector;
+        private Dictionary<string, List<Employee>> _lookup = new Dictionary<string, List<Employee>>();
+
+        public IEnumerator<IGrouping<string, Employee>> GetEnumerator()
+        {
+            return _lookup.Select(x => new MyGrouping(x.Key, x.Value)).GetEnumerator();
         }
 
+        public void AddElement(string key, Employee employee)
+        {
+            if (_lookup.ContainsKey(key))
+            {
+                _lookup[key].Add(employee);
+            }
+            else
+            {
+                _lookup.Add(key, new List<Employee> {employee});
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+        
         private IEnumerable<IGrouping<string, Employee>> ConvertMultiGrouping(Dictionary<string, List<Employee>> lookup)
         {
             var enumerator = lookup.GetEnumerator();
@@ -69,7 +89,6 @@ namespace CSharpAdvanceDesignTests
 
     public class MyGrouping : IGrouping<string, Employee>
     {
-        private readonly string _key;
         private readonly IEnumerable<Employee> _collection;
 
         public MyGrouping(string key, IEnumerable<Employee> collection)
