@@ -2,13 +2,13 @@
 using Lab.Entities;
 using NUnit.Framework;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace CSharpAdvanceDesignTests
 {
     [TestFixture]
-    [Ignore("not yet")]
     public class JoeyGroupByTests
     {
         [Test]
@@ -37,7 +37,57 @@ namespace CSharpAdvanceDesignTests
 
         private IEnumerable<IGrouping<string, Employee>> JoeyGroupBy(IEnumerable<Employee> employees)
         {
-            throw new NotImplementedException();
+            var lookup = new Dictionary<string, List<Employee>>();
+            var enumerator = employees.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var employee = enumerator.Current;
+                if (lookup.ContainsKey(employee.LastName))
+                {
+                    lookup[employee.LastName].Add(employee);
+                }
+                else
+                {
+                    lookup.Add(employee.LastName, new List<Employee> {employee});
+                }
+            }
+
+            return ConvertMultiGrouping(lookup);
         }
+
+        private IEnumerable<IGrouping<string, Employee>> ConvertMultiGrouping(Dictionary<string, List<Employee>> lookup)
+        {
+            var enumerator = lookup.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var keyValuePair = enumerator.Current;
+                
+                yield return new MyGrouping(keyValuePair.Key, keyValuePair.Value);
+            }
+        }
+    }
+
+    public class MyGrouping : IGrouping<string, Employee>
+    {
+        private readonly string _key;
+        private readonly IEnumerable<Employee> _collection;
+
+        public MyGrouping(string key, IEnumerable<Employee> collection)
+        {
+            _key = key;
+            _collection = collection;
+        }
+
+        public IEnumerator<Employee> GetEnumerator()
+        {
+            return _collection.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public string Key { get; }
     }
 }
