@@ -74,7 +74,7 @@ namespace CSharpAdvanceDesignTests
 
         public MyGrouping(string key, IEnumerable<Employee> collection)
         {
-            _key = key;
+            Key = key;
             _collection = collection;
         }
 
