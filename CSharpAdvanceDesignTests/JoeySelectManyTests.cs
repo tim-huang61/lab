@@ -1,11 +1,11 @@
 ﻿using ExpectedObjects;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CSharpAdvanceDesignTests
 {
     [TestFixture]
-    [Ignore("not yet")]
     public class JoeySelectManyTests
     {
         [Test]
@@ -17,7 +17,8 @@ namespace CSharpAdvanceDesignTests
                 new City {Name = "新北市", Sections = new List<string> {"三重", "新莊"}},
             };
 
-            var actual = JoeySelectMany(cities);
+           var actual = JoeySelectMany(cities);
+//            var actual = cities.SelectMany(c => c.Sections.Select(s => $"{c.Name}-{s}"));
 
             var expected = new[]
             {
@@ -33,7 +34,15 @@ namespace CSharpAdvanceDesignTests
 
         private IEnumerable<string> JoeySelectMany(IEnumerable<City> cities)
         {
-            throw new System.NotImplementedException();
+            var enumerator = cities.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var city = enumerator.Current;
+                foreach (var section in city.Sections)
+                {
+                    yield return $"{city.Name}-{section}";
+                }
+            }
         }
     }
 
